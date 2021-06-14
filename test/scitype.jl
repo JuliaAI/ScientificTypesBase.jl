@@ -27,7 +27,7 @@ end
 end
 
 @testset "scitype2" begin
-    ScientificTypes.Scitype(::Type{<:Integer}, ::MockMLJ) = Count
+    ScientificTypesBase.Scitype(::Type{<:Integer}, ::MockMLJ) = Count
     X = [1, 2, 3]
     @test scitype(X) == AbstractVector{Count}
     Xm = [missing, 1, 2, 3]
@@ -50,8 +50,8 @@ end
 
 @testset "Empty array" begin
     set_convention(MockMLJ())
-    ScientificTypes.Scitype(::Type{<:Integer}, ::MockMLJ) = Count
-    ScientificTypes.Scitype(::Type{Missing}, ::MockMLJ) = Missing
+    ScientificTypesBase.Scitype(::Type{<:Integer}, ::MockMLJ) = Count
+    ScientificTypesBase.Scitype(::Type{Missing}, ::MockMLJ) = Missing
     @test scitype(Int[]) == AbstractVector{Count}
     @test scitype(Any[]) == AbstractVector{Unknown}
     @test scitype(Missing[]) == AbstractVector{Missing}

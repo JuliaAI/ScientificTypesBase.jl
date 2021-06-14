@@ -1,4 +1,4 @@
-module ScientificTypes
+module ScientificTypesBase
 
 # Type exports
 export Convention
@@ -101,7 +101,7 @@ function trait(X)::Symbol
     for (name, f) in TRAIT_FUNCTION_GIVEN_NAME
         if f(X)
             found && error("Bad dictionary "*
-                           "`ScientificTypes.TRAIT_FUNCTION_GIVEN_NAME`. ")
+                           "`ScientificTypesBase.TRAIT_FUNCTION_GIVEN_NAME`. ")
             ret = name
             found = true
         end

@@ -1,7 +1,7 @@
 struct MockMLJ <: Convention end
 
 @testset "convention" begin
-    set_convention(ScientificTypes.NoConvention())
+    set_convention(ScientificTypesBase.NoConvention())
     c = ""
     @test_logs (:warn, "No convention specified. Did you forget to use the `set_convention` function?") (c = ST.convention())
     @test c isa ST.NoConvention

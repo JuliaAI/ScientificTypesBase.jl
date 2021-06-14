@@ -10,7 +10,7 @@ machine type, as specified by the active convention.
 ### Examples from the MLJ convention
 
 ```
-julia> using MLJScientificTypes # or `using MLJ`
+julia> using ScientificTypes # or `using MLJ`
 julia> scitype(3.14)
 Continuous
 
@@ -28,9 +28,9 @@ Table{Union{AbstractArray{Count,1}, AbstractArray{Multiclass{2},1}}}
 ```
 
 The specific behavior of `scitype` is governed by the active
-convention, as returned by `ScientificTypes.convention()`. The
-[MLJScientificTypes.jl
-documentation](https://alan-turing-institute.github.io/MLJScientificTypes.jl/dev/)
+convention, as returned by `ScientificTypesBase.convention()`. The
+[ScientificTypes.jl
+documentation](https://alan-turing-institute.github.io/ScientificTypes.jl/dev/)
 details the convention demonstrated above.
 
 """
