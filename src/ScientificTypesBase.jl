@@ -1,4 +1,4 @@
-module ScientificTypesBase 
+module ScientificTypesBase
 
 # Type exports
 export Convention
