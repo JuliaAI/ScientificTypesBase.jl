@@ -1,4 +1,4 @@
-# ScientificTypesBase
+# ScientificTypesBase.jl
 
 | [Linux] | Coverage |
 | :-----------: | :------: |
@@ -27,8 +27,12 @@ are used to represent weights, for example.
 
 For implementation of a concrete convention assigning specific
 scientific types (interpretations) to julia objects, see instead the
-[ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl)
+[ScientificTypes.jl](https://github.com/JuliaAI/ScientificTypes.jl)
 package.
+
+Formerly "ScientificTypesBase.jl" code lived at "ScientificTypes.jl".
+Since version 2.0 the code at "ScientificTypes.jl" is code that
+formerly resided at "MLJScientificTypes.jl" (now deprecated).
 
 ```
 Finite{N}
