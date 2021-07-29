@@ -21,35 +21,35 @@ export TRAIT_FUNCTION_GIVEN_NAME, set_convention
 
 abstract type Found          end
 abstract type Known <: Found end
-struct      Unknown <: Found end
+abstract type Unknown <: Found end
 
 abstract type           Infinite <: Known end
 abstract type          Finite{N} <: Known end
 abstract type         Image{W,H} <: Known end
 abstract type ScientificTimeType <: Known end
-struct                   Textual <: Known end
-struct                  Table{K} <: Known end
+abstract type            Textual <: Known end
+abstract type           Table{K} <: Known end
 
-struct Continuous <: Infinite end
-struct      Count <: Infinite end
+abstract type Continuous <: Infinite end
+abstract type  Count <: Infinite end
 
-struct    Multiclass{N} <: Finite{N} end
-struct OrderedFactor{N} <: Finite{N} end
+abstract type    Multiclass{N} <: Finite{N} end
+abstract type OrderedFactor{N} <: Finite{N} end
 
-struct     ScientificDate <: ScientificTimeType end
-struct     ScientificTime <: ScientificTimeType end
-struct ScientificDateTime <: ScientificTimeType end
+abstract type ScientificDate <: ScientificTimeType end
+abstract type ScientificTime <: ScientificTimeType end
+abstract type ScientificDateTime <: ScientificTimeType end
 
-struct  GrayImage{W,H} <: Image{W,H} end
-struct ColorImage{W,H} <: Image{W,H} end
+abstract type  GrayImage{W,H} <: Image{W,H} end
+abstract type ColorImage{W,H} <: Image{W,H} end
 
-struct ManifoldPoint{M} <: Known end
+abstract type ManifoldPoint{M} <: Known end
 
 # aliases:
 const Binary     = Finite{2}
-const Scientific = Union{Missing,Found}
+const Scientific = Union{Missing,Found} # deprecated (no longer publicized)
 
-# convenience alias
+# for internal use
 const Arr = AbstractArray
 
 # -------------------------------------------------------------------
