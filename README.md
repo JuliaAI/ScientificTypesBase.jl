@@ -130,7 +130,7 @@ one has `scitype(3.14) = Continuous` and `scitype(42) = Count`.
 > *Aside.* `scitype` is *not* a mapping of types to types but from
 > *instances* to types. This is because one may want to distinguish
 > the scientific type of objects having the same machine type. For
-> example, in the `Standard` convention adopted in ScientificTypes.jl, some
+> example, in the `DefaultConvention` implemented in ScientificTypes.jl, some
 > `CategoricalArrays.CategoricalValue` objects have the scitype
 > `OrderedFactor` but others are `Multiclass`. In CategoricalArrays.jl
 > the `ordered` attribute is not a type parameter and so it can only
