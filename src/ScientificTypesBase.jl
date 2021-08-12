@@ -10,6 +10,7 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     ScientificTime,
     Textual, Binary,
     ColorImage, GrayImage, Image, Table,
+    Density, Sampleable,
     ManifoldPoint
 export scitype, scitype_union, elscitype, nonmissing, trait
 
@@ -42,6 +43,9 @@ abstract type ScientificDateTime <: ScientificTimeType end
 
 abstract type  GrayImage{W,H} <: Image{W,H} end
 abstract type ColorImage{W,H} <: Image{W,H} end
+
+abstract type Sampleable{Ω} end
+abstract type Density{Ω} <: Sampleable{Ω} end
 
 abstract type ManifoldPoint{M} <: Known end
 
