@@ -52,6 +52,9 @@ ScientificTimeType
 ├─ ScientificTime
 └─ ScientificDateTime
 
+Sampleable{Ω}
+└─ Density{Ω}
+
 Table{K}
 
 Textual
@@ -98,10 +101,11 @@ for trait values). Instances of the types play no role.
 The types `Finite{N}`, `Multiclass{N}` and `OrderedFactor{N}` are all
 parametrised by the number of levels `N`, while `Image{W,H}`,
 `GrayImage{W,H}` and `ColorImage{W,H}` are all parametrised by the
-image width and height dimensions, `(W, H)`. The type
-`ManifoldPoint{MT}`, intended for points lying on a manifold, is
-parameterized by the type `MT` of the manifold to which the points
-belong.
+image width and height dimensions, `(W, H)`. The parameter `Ω` in
+`Sampleable{Ω}` and `Density{Ω}` is the scientific type of the sample
+space. The type `ManifoldPoint{MT}`, intended for points lying on a
+manifold, is parameterized by the type `MT` of the manifold to which
+the points belong.
 
 The scientific type `ScientificDate` is for representing dates (for
 example, the 23rd of April, 2029), `ScientificTime` represents time
