@@ -15,7 +15,7 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
 export scitype, scitype_union, elscitype, nonmissing, trait
 
 # utils (should not be re-exported)
-export TRAIT_FUNCTION_GIVEN_NAME, set_convention
+export set_convention
 
 # -------------------------------------------------------------------
 # Scientific Types
@@ -88,30 +88,31 @@ end
 # -------------------------------------------------------------------
 # trait
 
-const TRAIT_FUNCTION_GIVEN_NAME = Dict{Symbol,Function}()
-
 """
     trait(X)
 
-Check `X` against traits specified in `TRAIT_FUNCTION_GIVEN_NAME` and
-return a symbol corresponding to the first matching trait, or `:other`
-if `X` didn't match any of the trait functions. If more than one trait
-matches, throw an error.
+Return a symbol representing the "trait" of an object (such as
+`:table`). It's purpose is to enable implementing `scitype` for
+objects on which the scientific type cannot be extracted from the
+object, but can be extracted from some trait function (such as
+`Tables.is_table`).
+
+Intended only for use by packages implementing a scientific type
+convention based on ScientificTypesBase.jl, which provides only the
+method stub.
+
+### Details
+
+In this package `scitype(X)` calls this code:
+
+```julia
+scitype(X;    kw...) = scitype(X, convention();     kw...)
+scitype(X, C; kw...) = scitype(X, C, Val(trait(X)); kw...)
+```
 
 """
-function trait(X)::Symbol
-    ret = :other
-    found = false
-    for (name, f) in TRAIT_FUNCTION_GIVEN_NAME
-        if f(X)
-            found && error("Bad dictionary "*
-                           "`ScientificTypesBase.TRAIT_FUNCTION_GIVEN_NAME`. ")
-            ret = name
-            found = true
-        end
-    end
-    return ret
-end
+function trait end
+
 
 # -----------------------------------------------------------------
 # nonmissing

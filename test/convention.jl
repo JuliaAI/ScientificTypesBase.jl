@@ -11,20 +11,17 @@ struct MockMLJ <: Convention end
     @test c isa MockMLJ
 end
 
+function ST.trait(X)
+    Tables.istable(X) && return :table
+    return :other
+end
+
 @testset "trait" begin
-    TRAIT_FUNCTION_GIVEN_NAME[:table] = Tables.istable
-
-    isjunk(::Any)     = false
-    isjunk(s::String) = s == "junk" ? true : false
-    TRAIT_FUNCTION_GIVEN_NAME[:junk] = isjunk
-
     X = [1,2,3]
     @test ST.trait(X) == :other
     X = (x = [1,2,3],
          y = [5,5,7])
     @test ST.trait(X) == :table
-    TRAIT_FUNCTION_GIVEN_NAME[:named_tuple] = X -> X isa NamedTuple
-    @test_throws Exception ST.trait(X)
 end
 
 @testset "nonmissing" begin
