@@ -16,7 +16,7 @@ This package makes a distinction between the **machine type** and
 
 * The _scientific type_ is one of the types defined in this package
   reflecting how the object should be _interpreted_ (for instance,
-  `Continuous` or `Multiclass`).
+  `Continuous` or `Multiclass{3}`).
 
 The distinction is useful because the same machine type is often used
 to represent data with *differing* scientific interpretations - `Int`
