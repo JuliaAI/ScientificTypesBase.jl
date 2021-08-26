@@ -24,6 +24,10 @@ abstract type Found          end
 abstract type Known <: Found end
 abstract type Unknown <: Found end
 
+abstract type Annotated{S} <: Known end
+abstract type AnnotationOf{S} <: Known end
+abstract type Multiset{S} <: Known end
+
 abstract type           Infinite <: Known end
 abstract type          Finite{N} <: Known end
 abstract type         Image{W,H} <: Known end
