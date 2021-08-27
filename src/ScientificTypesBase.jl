@@ -11,7 +11,8 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     Textual, Binary,
     ColorImage, GrayImage, Image, Table,
     Density, Sampleable,
-    ManifoldPoint
+    ManifoldPoint,
+    Annotated, AnnotationOf, Multiset, Iterator
 export scitype, scitype_union, elscitype, nonmissing, trait
 
 # utils (should not be re-exported)
