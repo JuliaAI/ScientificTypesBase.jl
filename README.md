@@ -55,6 +55,12 @@ ScientificTimeType
 Sampleable{Ω}
 └─ Density{Ω}
 
+Annotated{S}
+
+AnnotationFor{S}
+
+Multiset{S}
+
 Table{K}
 
 Textual
