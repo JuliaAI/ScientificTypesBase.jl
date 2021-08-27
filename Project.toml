@@ -1,7 +1,7 @@
 name = "ScientificTypesBase"
 uuid = "30f210dd-8aff-4c5f-94ba-8e64358c1161"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>", "Thibaut Lienart <thibaut.lienart@gmail.com>"]
-version = "2.1.0"
+version = "2.2.0"
 
 [compat]
 julia = "1"

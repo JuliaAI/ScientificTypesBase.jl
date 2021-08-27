@@ -11,7 +11,8 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     Textual, Binary,
     ColorImage, GrayImage, Image, Table,
     Density, Sampleable,
-    ManifoldPoint
+    ManifoldPoint,
+    Annotated, AnnotationOf, Multiset, Iterator
 export scitype, scitype_union, elscitype, nonmissing, trait
 
 # utils (should not be re-exported)
@@ -23,6 +24,14 @@ export TRAIT_FUNCTION_GIVEN_NAME, set_convention
 abstract type Found          end
 abstract type Known <: Found end
 abstract type Unknown <: Found end
+
+abstract type Annotated{S} <: Known end
+abstract type AnnotationOf{S} <: Known end
+abstract type Multiset{S} <: Known end
+
+# for iterators over objects with scitype Ω that do not have some
+# AbstractVector scitype:
+abstract type Iterator{Ω} end
 
 abstract type           Infinite <: Known end
 abstract type          Finite{N} <: Known end
@@ -44,6 +53,7 @@ abstract type ScientificDateTime <: ScientificTimeType end
 abstract type  GrayImage{W,H} <: Image{W,H} end
 abstract type ColorImage{W,H} <: Image{W,H} end
 
+# when sampled, objects with these scitypes return objects of scitype Ω:
 abstract type Sampleable{Ω} end
 abstract type Density{Ω} <: Sampleable{Ω} end
 
