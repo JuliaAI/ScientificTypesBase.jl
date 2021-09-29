@@ -12,7 +12,9 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     ColorImage, GrayImage, Image, Table,
     Density, Sampleable,
     ManifoldPoint,
-    Annotated, AnnotationOf, Multiset, Iterator
+    Annotated, AnnotationOf, Multiset, Iterator,
+    Compositional
+
 export scitype, scitype_union, elscitype, nonmissing, trait
 
 # utils (should not be re-exported)
@@ -58,6 +60,9 @@ abstract type Sampleable{Ω} end
 abstract type Density{Ω} <: Sampleable{Ω} end
 
 abstract type ManifoldPoint{M} <: Known end
+
+# compositional data with D components, see CoDa.jl
+abstract type Compositional{D} <: Known end
 
 # aliases:
 const Binary     = Finite{2}
