@@ -67,6 +67,8 @@ Textual
 
 ManifoldPoint{MT}
 
+Compositional{D}
+
 Unknown
 ```
 

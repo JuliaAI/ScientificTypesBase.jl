@@ -49,7 +49,7 @@ end
 end
 
 @testset "compositional" begin
-    @test Compositional <: Known
+    @test Compositional{3} <: Known
 end
 
 @testset "Empty array" begin

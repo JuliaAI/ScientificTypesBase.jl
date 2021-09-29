@@ -61,8 +61,8 @@ abstract type Density{Ω} <: Sampleable{Ω} end
 
 abstract type ManifoldPoint{M} <: Known end
 
-# compositional data, see CoDa.jl
-abstract type Compositional <: Known end
+# compositional data with D components, see CoDa.jl
+abstract type Compositional{D} <: Known end
 
 # aliases:
 const Binary     = Finite{2}
