@@ -48,6 +48,10 @@ end
     @test ScientificTime <: ScientificTimeType
 end
 
+@testset "compositional" begin
+    @test Compositional{3} <: Known
+end
+
 @testset "Empty array" begin
     set_convention(MockMLJ())
     ScientificTypesBase.Scitype(::Type{<:Integer}, ::MockMLJ) = Count
