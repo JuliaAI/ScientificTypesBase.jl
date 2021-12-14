@@ -15,10 +15,7 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     Annotated, AnnotationOf, Multiset, Iterator,
     Compositional
 
-export scitype, scitype_union, elscitype, nonmissing, trait
-
-# utils (should not be re-exported)
-export TRAIT_FUNCTION_GIVEN_NAME, set_convention
+export nonmissing
 
 # -------------------------------------------------------------------
 # Scientific Types
@@ -70,63 +67,11 @@ const Scientific = Union{Missing,Found} # deprecated (no longer publicized)
 
 # for internal use
 const Arr = AbstractArray
-
-# -------------------------------------------------------------------
+const TUPLE_SPECIALIZATION_THRESHOLD = 20
+# ------------------------------------------------------------------
 # Convention
 
 abstract type Convention end
-struct NoConvention <: Convention end
-
-const CONVENTION = Ref{Convention}(NoConvention())
-
-"""
-    set_convention(C)
-
-Set the current convention to `C`.
-"""
-set_convention(C::Convention) = (CONVENTION[] = C; nothing)
-
-"""
-    convention()
-
-Return the current convention.
-"""
-function convention()::Convention
-    C = CONVENTION[]
-    if C isa NoConvention
-        @warn "No convention specified. Did you forget to use the " *
-              "`set_convention` function?"
-    end
-    return C
-end
-
-# -------------------------------------------------------------------
-# trait
-
-const TRAIT_FUNCTION_GIVEN_NAME = Dict{Symbol,Function}()
-
-"""
-    trait(X)
-
-Check `X` against traits specified in `TRAIT_FUNCTION_GIVEN_NAME` and
-return a symbol corresponding to the first matching trait, or `:other`
-if `X` didn't match any of the trait functions. If more than one trait
-matches, throw an error.
-
-"""
-function trait(X)::Symbol
-    ret = :other
-    found = false
-    for (name, f) in TRAIT_FUNCTION_GIVEN_NAME
-        if f(X)
-            found && error("Bad dictionary "*
-                           "`ScientificTypesBase.TRAIT_FUNCTION_GIVEN_NAME`. ")
-            ret = name
-            found = true
-        end
-    end
-    return ret
-end
 
 # -----------------------------------------------------------------
 # nonmissing

@@ -72,7 +72,7 @@ Compositional{D}
 Unknown
 ```
 
-> Figure 1. The type hierarchy defined in ScientificTypesBase.jl (The Julia native `Missing` type is also regarded as a scientific type).
+> Figure 1. The type hierarchy defined in ScientificTypesBase.jl (The Julia native `Missing` and `Nothing` type are also regarded as a scientific types).
 
 #### Contents
 
@@ -134,10 +134,11 @@ types.
 #### 2. The `scitype` and `Scitype` methods
 
 ScientificTypesBase provides a method `scitype` for articulating a
-particular convention: `scitype(X)` is the scientific type of object
-`X`. For example, in the `MLJ` convention, implemented by
-[ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl),
-one has `scitype(3.14) = Continuous` and `scitype(42) = Count`.
+particular convention: `scitype(X, C())` is the scientific type of object
+`X` under convention `C`. For example, in the `DefaultConvention` convention, implemented 
+by [ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl),
+one has `scitype(3.14, Defaultconvention()) = Continuous` and 
+`scitype(42, Defaultconvention()) = Count`.
 
 > *Aside.* `scitype` is *not* a mapping of types to types but from
 > *instances* to types. This is because one may want to distinguish
@@ -151,44 +152,46 @@ one has `scitype(3.14) = Continuous` and `scitype(42) = Count`.
 The developer implementing a particular scientific type convention
 [overloads](#defining-a-new-convention) the `scitype` method
 appropriately. However, this package provides certain rudimentary
-fallback behaviour; only Property 1 below should be altered by the
-developer:
+fallback behaviour:
 
-**Property 0.** `scitype(missing) = Missing` and `scitype(nothing) =
-Nothing` (regarding `Missing` and `Nothing` as native scientific
-types).
+**Property 0.** For any convention `C`, `scitype(missing, C()) == Missing` 
+and `scitype(nothing, C()) == Nothing` (regarding `Missing` and `Nothing` 
+as native scientific types).
 
-**Property 1.** `scitype(X) = Unknown`, unless `X` is a tuple, an
-abstract array, or `missing`.
+**Property 1.** For any convention `C` `scitype(X, C()) == Unknown`, unless 
+`X` is a tuple, an abstract array, `nothing`, or `missing`.
 
-**Property 2.** The scitype of a `k`-tuple is `Tuple{S1, S2, ...,
-Sk}` where `Sj` is the scitype of the `j`th element.
+**Property 2.** For any convention `C`, The scitype of a `k`-tuple is 
+`Tuple{S1, S2, ..., Sk}` where `Sj` is the scitype of the `j`th element under 
+convention `C`.
 
-For example, in the `MLJ` convention:
+For example, in the `Defaultconvention` convention implemented 
+by [ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl):
 
 ```julia
-julia> scitype((1, 4.5))
+julia> scitype((1, 4.5), Defaultconvention())
 Tuple{Count, Continuous}
 ```
 
-**Property 3.** The scitype of an `AbstractArray`, `A`, is
-always`AbstractArray{U}` where `U` is the union of the scitypes of the
-elements of `A`, with one exception: If `typeof(A) <:
-AbstractArray{Union{Missing,T}}` for some `T` different from `Any`,
-then the scitype of `A` is `AbstractArray{Union{Missing, U}}`, where
-`U` is the union over all non-missing elements, **even if `A` has no
-missing elements.**
+**Property 3.** For any given convention `C`, the scitype of an 
+`AbstractArray`, `A`, is always`AbstractArray{U}` where `U` is the union 
+of the scitypes of the elements of `A` under convention `C`, with one 
+exception: If `typeof(A) <:AbstractArray{Union{Missing,T}}` for some `T` 
+different from `Any`, then the scitype of `A` is `AbstractArray{Union{Missing, U}}`, 
+where `U` is the union over all non-missing elements under convention `C`, **even 
+if `A` has no missing elements.**
 
-The exception is made for performance reasons. In `MLJ`:
+This exception is made for performance reasons. In `DefaultConvention` implemented 
+by [ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl):
 
 ```julia
 julia> v = [1.3, 4.5, missing]
-julia> scitype(v)
-AbstractArray{Union{Missing, Continuous},1}
+julia> scitype(v, DefaultConvention())
+AbstractArray{Union{Missing, Continuous}, 1}
 ```
 
 ```julia
-julia> scitype(v[1:2])
+julia> scitype(v[1:2], DefaultConvention())
 AbstractArray{Union{Missing, Continuous},1}
 ```
 
@@ -200,28 +203,15 @@ AbstractArray{Union{Missing, Continuous},1}
 > up compututations by implementing a `Scitype` method.  Do
 > `?ScientificTypesBase.Scitype` for details.
 
-
-#### 3. Trait dictionary
-
-Scientific types provides a dictionary `TRAIT_FUNCTION_GIVEN_NAME` for
-registering names (symbols) for boolean-value trait functions used to
-dispatch `scitype` in cases that direct type-dispatch is
-inadequate. See [below](#adding-explicit-scitype-declarations) for
-details.
-
 #### 4. Convenience methods
 
 Scientific provides the following convenience functions:
 
-- `trait(X)` - return the trait name associated with the trait holding for `X`
+- `scitype_union(A, C::Convention)` - return the union of the scitypes of all 
+elements of iterable `A` as specified under convention `C`.
 
-- `set_convention(C)` - activate the convention named `C`
-
-- `set_convention()` - inspect the active convention
-
-- `scitype_union(A)` - return the union of the scitypes of all elements of iterable `A`
-
-- `elscitype(A)` - return the "element scitype" of array `A`
+- `elscitype(A, C::Convention)` - return the "element scitype" of array `A` as 
+specified under convention `C`.
 
 Query the doc-strings for details.
 
@@ -234,10 +224,11 @@ parameter `K` is to encode the scientific type(s) of its
 columns. Specifically, developers are requested to adhere to the
 following:
 
-**Tabular data convention.** If `scitype(X) <: Table`, then in fact
+**Tabular data convention.** If `scitype(X, C()) <: Table`, for a given 
+convention `C` then in fact
 
 ```julia
-scitype(X) == Table{Union{scitype(c1), ..., scitype(cn)}}
+scitype(X, C()) == Table{Union{scitype(c1, C), ..., scitype(cn, C)}}
 ```
 
 where `c1`, `c2`, ..., `cn` are the columns of `X`. With this
@@ -246,16 +237,16 @@ instance, you could check that each column of `X` has an element
 scitype that is either `Continuous` or `Finite`:
 
 ```@example 5
-scitype(X) <: Table{<:Union{AbstractVector{<:Continuous}, AbstractVector{<:Finite}}}
+scitype(X, C()) <: Table{<:Union{AbstractVector{<:Continuous}, AbstractVector{<:Finite}}}
 ```
 
 A built-in `Table` constructor provides a shorthand for the right-hand side:
 
 ```@example 5
-scitype(X) <: Table(Continuous, Finite)
+scitype(X, C()) <: Table(Continuous, Finite)
 ```
 
-Note that `Table(Continuous,Finite)` is a *type* union and not a `Table` *instance*.
+Note that `Table(Continuous, Finite)` is a *type* union and not a `Table` *instance*.
 
 
 ## Defining a new convention
@@ -268,25 +259,16 @@ The steps below summarise the possible steps in defining such a convention:
 
 * declare a new convention,
 * add explicit `scitype` (and `Scitype`) definitions,
-* register any traits that were needed to define scitypes,
 * optionally define `coerce` methods for your convention
 
 Each step is explained below, taking the MLJ convention as an example.
 
 ### Naming the convention
 
-In the module, define a
+In the module, define a singleton as thus
 
 ```julia
 struct MyConvention <: ScientificTypesBase.Convention end
-```
-
-and add an init function with:
-
-```julia
-function __init__()
-  ScientificTypesBase.set_convention(MyConvention())
-end
 ```
 
 ### Adding explicit `scitype` declarations.
@@ -295,56 +277,29 @@ When overloading `scitype` one needs to dipatch over the convention,
 as in this example:
 
 ```julia
-ScientificTypesBase.scitype(::Integer, ::MLJ) = Count
+ScientificTypesBase.scitype(::Integer, ::DefaultConvention) = Count
 ```
-
-In some cases, however, the scientific type to be attributed to an
-object might depend on the evaluation of a boolean-valued trait
-function. There is a mechanism for "registering" such traits to
-streamline trait-based dispatch of the `scitype` method. This is best
-illustrated with an example.
-
-In the MLJ convention, all containers that meet the
-[`Tables.jl`](https://github.com/JuliaData/Tables.jl) interface are
-deemed to have scitype `Table`. These are detected using the Tables.jl
-trait `istable`. Our first step is to choose a name for the trait, in
-	this case `:table`. Our `scitype` declaration then reads:
-
-```
-function ScientificTypesBase.scitype(X, ::MLJ, ::Val{:table})
-   K = <some type depending on columns of X>
-   return Table{K}
-end
-```
-
-For this to work we now need to register the trait, which means adding
-to the `TRAIT_FUNCTION_GIVEN_NAME` dictionary, which should be
-performed within the init function of the defining package:
-
+To avoid method ambiguities, avoid dispatching only on the first argument.
+For example, defining
 ```julia
-function __init__()
-    ScientificTypesBase.set_convention(MLJ())
-    ScientificTypesBase.TRAIT_FUNCTION_GIVEN_NAME[:table] = Tables.istable
-end
+ScientificTypesBase.scitype(::AbstractFloat, C) = Continous
 ```
-
-**Important limitation.** One may not add a trait function to
-the `TRAIT_FUNCTION_GIVEN_NAME` dictionary if it holds `true` on some
-object `X` for which an existing trait already holds true.
-
-
+would lead to ambiguities in another package defining 
+```julia
+ScientificTypesBase.scitype(a, ::DefaultConvention) = Count
+```
 ### Defining a `coerce` function
 
 It may be very useful to define a function to coerce machine types so
 as to correct an unintended scientific interpretation, according to a
-given convention.  In the `MLJ` convention, this is implemented by
+given convention.  In the `DefaultConvention` convention, this is implemented by
 defining `coerce` methods (no stub provided by `ScientificTypesBase`)
 
 For instance consider the simplified:
 
 ```julia
-function coerce(y::AbstractArray{T}, T2::Type{<:Union{Missing,Continuous}}
-                ) where T <: Union{Missing,Real}
+function coerce(y::AbstractArray{T}, T2::Type{<:Union{Missing, Continuous}}
+                ) where T <: Union{Missing, Real}
     return float(y)
 end
 ```
@@ -356,6 +311,3 @@ In the case of tabular data, one might additionally define `coerce`
 methods to selectively coerce data in specified columns. See
 [ScientificTypes](https://github.com/JuliaAI/ScientificTypes.jl)
 for examples.
-
-
-
