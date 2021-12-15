@@ -15,8 +15,7 @@ export Scientific, Found, Unknown, Known, Finite, Infinite,
     Annotated, AnnotationOf, Multiset, Iterator,
     Compositional
 
-export nonmissing
-
+export elscitype, nonmissing
 # -------------------------------------------------------------------
 # Scientific Types
 

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------------------
 # This file introduces `scitype`, `Scitype` methods and associated fallbacks methods. 
-# It also defines some convineince methods.
+# It also defines some conveneince methods.
 # -----------------------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ Nevertheless, for some *restricted* machine types `U`, the statement
 `type(X) == AbstractArray{T, N}` for some `T<:U` already allows one
 deduce that `scitype(X, C) = AbstractArray{S, N}`, where `S` is determined
 by `U`, and convention `C` alone. This is the case in the `DefaultConvention` which is 
-used by *MLJ* , where for example, if `U = Integer`, then `S = Count`.
+used by *ScientificTypes.jl* , where for example, if `U = Integer`, then `S = Count`.
 
 Such shortcuts are specified as follows:
 
