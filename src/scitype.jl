@@ -13,10 +13,10 @@ machine type) as specified by the convention 'C'.
 """
 function scitype end
 
-scitype(X, C::Convention; kw...) = fallback_scitype(X, C; kw...)
-fallback_scitype(X, C; kw...) = Unknown
-fallback_scitype(::Missing, C; kw...) = Missing
-fallback_scitype(::Nothing, C; kw...) = Nothing
+scitype(X, C::Convention) = fallback_scitype(X, C)
+fallback_scitype(X, C) = Unknown
+fallback_scitype(::Missing, C) = Missing
+fallback_scitype(::Nothing, C) = Nothing
 
 # -----------------------------------------------------------------------------------------
 # `Scitype` function (generic) with fallbacks.
@@ -75,58 +75,42 @@ Fallback_Scitype(::Type{Nothing}, C) = Nothing
 # ---------------------------------------------------------------------------------------
 # Fallbacks for `scitype` of tuples and abstractarrays.
 
-function fallback_scitype(@nospecialize(t::Tuple), C; kw...)
+function fallback_scitype(@nospecialize(t::Tuple), C)
     if length(t) <= TUPLE_SPECIALIZATION_THRESHOLD
-        return _tuple_scitype(t, C; kw...)
+        return _tuple_scitype(t, C)
     else
-        return Tuple{(scitype(el, C; kw...) for el in t)...}
+        return Tuple{(scitype(el, C) for el in t)...}
     end
 end
 
-@inline function _tuple_scitype(t::T, C; kw...) where {T}
+@inline function _tuple_scitype(t::T, C) where {T}
     if @generated
         stypes = Tuple(
-            :(scitype(getindex(t, $i), C; kw...)) for i in 1:fieldcount(T)
+            :(scitype(getindex(t, $i), C)) for i in 1:fieldcount(T)
         )
         return :(Tuple{$(stypes...)})
     else
         stypes_ = Tuple(
-            scitype(getindex(t, i), C; kw...) for i in 1:fieldcount(T)
+            scitype(getindex(t, i), C) for i in 1:fieldcount(T)
         )
         return Tuple{(stypes_)...}
     end
 end
 
-function fallback_scitype(A::Arr{T}, C; kw...) where T
-    return arr_scitype(A, Scitype(T, C), C; kw...)
+function fallback_scitype(A::Arr{T}, C) where T
+    return arr_scitype(A, Scitype(T, C), C)
 end
 
 """
-    arr_scitype(A, S, C; tight)
+    arr_scitype(A, S, C)
 
 Return the scitype associated with an  array `A` of type `{T, N}` assuming an
 explicit `Scitype` correspondence exist mapping `T` to `S`.
-If `tight=true` and `T>:Missing` then the function checks whether there are
-"true missing values", otherwise it returns the scitype asscoiated with a 
-"tight copy" of the array.
-**Note**
-The eltype of a "tight_copy" of an array with eltype `Union{T, Missing}` is `T`  
 """
 @inline function arr_scitype(
     @nospecialize(A::Arr{T, N}), S::Type, C;
     tight::Bool = false
 ) where {T, N}
-    if T >: Missing && tight
-        has_missings = findfirst(ismissing, A) !== nothing
-        _S = !has_missings ? Scitype(nonmissing(T), C) : S
-    else
-        _S = S
-    end
-
-    return _take_scitype_union_if_needed(A, _S, C)
-end
-
-function _take_scitype_union_if_needed(A::Arr{T, N}, S::Type, C) where {T, N}
     if S === Unknown
         return Arr{scitype_union(A, C), N}
     elseif S === Union{Scitype(Missing, C), Unknown}
@@ -137,7 +121,7 @@ function _take_scitype_union_if_needed(A::Arr{T, N}, S::Type, C) where {T, N}
 end
 
 # -----------------------------------------------------------------------------------------
-# Convenience methods.
+# internal methods.
 
 """
     scitype_union(A, C::convention)
@@ -149,12 +133,3 @@ function scitype_union(A, C::Convention)
     iterate(A) === nothing && return Unknown
     reduce((a, b)->Union{a, b}, (scitype(el, C) for el in A))
 end
-
-"""
-    elscitype(A, C::Convention)
-
-Return the element scientific type of an abstract array `A` as specified by 
-convention `C`. By definition, if `scitype(A, C) = AbstractArray{S, N}`, then
-`elscitype(A, C) = S`.
-"""
-elscitype(X::Arr, C::Convention; kw...) = eltype(scitype(X, C; kw...))

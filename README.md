@@ -203,18 +203,6 @@ AbstractArray{Union{Missing, Continuous},1}
 > up compututations by implementing a `Scitype` method.  Do
 > `?ScientificTypesBase.Scitype` for details.
 
-#### 4. Convenience methods
-
-Scientific provides the following convenience functions:
-
-- `scitype_union(A, C::Convention)` - return the union of the scitypes of all 
-elements of iterable `A` as specified under convention `C`.
-
-- `elscitype(A, C::Convention)` - return the "element scitype" of array `A` as 
-specified under convention `C`.
-
-Query the doc-strings for details.
-
 
 #### More on the `Table` type
 

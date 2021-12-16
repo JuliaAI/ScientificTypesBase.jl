@@ -20,7 +20,6 @@ end
 
     Xnm = X[2:end]
     @test scitype(Xnm, MockMLJ()) == AbstractVector{Union{Missing, Unknown}}
-    @test scitype(Xnm, MockMLJ(); tight=true) == AbstractVector{Unknown}
 
     Xm = Any[missing, missing]
     @test scitype(Xm, MockMLJ()) == AbstractVector{Missing}
@@ -36,12 +35,6 @@ end
     @test scitype(Xm, MockMLJ()) == AbstractVector{Union{Missing,Count}}
     Xnm = Xm[2:end]
     @test scitype(Xnm, MockMLJ()) == AbstractVector{Union{Missing,Count}}
-    @test scitype(Xnm, MockMLJ(); tight=true) == AbstractVector{Count}
-
-    @test elscitype(X, MockMLJ()) == Count
-    @test elscitype(Xm, MockMLJ()) == Union{Missing,Count}
-    @test elscitype(Xnm, MockMLJ()) == Union{Missing,Count}
-    @test elscitype(Xnm, MockMLJ(); tight=true) == Count
 end
 
 @testset "temporal types" begin
