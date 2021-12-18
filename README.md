@@ -277,11 +277,11 @@ would lead to ambiguities in another package defining
 ScientificTypesBase.scitype(a, ::DefaultConvention) = Count
 ```
 
-Since `ScientificTypesBase.jl` does not define a single-argument `scitype(X)` method, an implementation of a new scientific convention will typically want to explicitly implement the single argument method, to save users from needing to explicitly specify a convention. That is, so the user can call `scitype(2.3)` instead of `scitype(2.3, MyConvention())`.
+Since `ScientificTypesBase.jl` does not define a single-argument `scitype(X)` method, an implementation of a new scientific convention will typically want to explicitly implement the single argument method in their package, to save users from needing to explicitly specify a convention. That is, so the user can call `scitype(2.3)` instead of `scitype(2.3, MyConvention())`.
 
 For example, one declares:
 ```julia
-ScientificTypesBase.scitype(X) = scitype(X, MyConvention())
+scitype(X) = scitype(X, MyConvention())
 ```
 
 ### Defining a `coerce` function
