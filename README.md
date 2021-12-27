@@ -120,8 +120,7 @@ example, the 23rd of April, 2029), `ScientificTime` represents time
 within a 24-hour day, while `ScientificDateTime` represents both a
 time of day and date. These types mirror the types `Date`, `Time` and
 `DateTime` from the Julia standard library Dates (and indeed, in the
-[MLJ
-convention](https://github.com/JuliaAI/ScientificTypes.jl)
+convention defined in ScientificTypes.jl](https://github.com/JuliaAI/ScientificTypes.jl)
 the difference is only a formal one).
 
 The type parameter `K` in `Table{K}` is for conveying the scientific
@@ -249,7 +248,7 @@ The steps below summarise the possible steps in defining such a convention:
 * add explicit `scitype` (and `Scitype`) definitions,
 * optionally define `coerce` methods for your convention
 
-Each step is explained below, taking the MLJ convention as an example.
+Each step is explained below, taking `DefaultConvenion` as an example.
 
 ### Naming the convention
 
@@ -265,7 +264,7 @@ When overloading `scitype` one needs to dipatch over the convention,
 as in this example:
 
 ```julia
-ScientificTypesBase.scitype(::Integer, ::DefaultConvention) = Count
+ScientificTypesBase.scitype(::Integer, ::MyConvention) = Count
 ```
 To avoid method ambiguities, avoid dispatching only on the first argument.
 For example, defining
@@ -274,7 +273,7 @@ ScientificTypesBase.scitype(::AbstractFloat, C) = Continous
 ```
 would lead to ambiguities in another package defining 
 ```julia
-ScientificTypesBase.scitype(a, ::DefaultConvention) = Count
+ScientificTypesBase.scitype(a, ::MyConvention) = Count
 ```
 
 Since `ScientificTypesBase.jl` does not define a single-argument `scitype(X)` method, an implementation of a new scientific convention will typically want to explicitly implement the single argument method in their package, to save users from needing to explicitly specify a convention. That is, so the user can call `scitype(2.3)` instead of `scitype(2.3, MyConvention())`.
