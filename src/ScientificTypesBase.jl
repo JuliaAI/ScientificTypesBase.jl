@@ -87,7 +87,8 @@ if VERSION < v"1.3"
         return T isa Union ? ifelse(T.a == Missing, T.b, T.a) : T
     end
 end
-nonmissing = nonmissingtype
+
+const nonmissing = nonmissingtype
 
 # -----------------------------------------------------------------
 # Constructor for table scientific type
