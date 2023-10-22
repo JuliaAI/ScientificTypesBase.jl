@@ -120,7 +120,7 @@ example, the 23rd of April, 2029), `ScientificTime` represents time
 within a 24-hour day, while `ScientificDateTime` represents both a
 time of day and date. These types mirror the types `Date`, `Time` and
 `DateTime` from the Julia standard library Dates (and indeed, in the
-convention defined in ScientificTypes.jl](https://github.com/JuliaAI/ScientificTypes.jl)
+convention defined in [ScientificTypes.jl](https://github.com/JuliaAI/ScientificTypes.jl)
 the difference is only a formal one).
 
 The type parameter `K` in `Table{K}` is for conveying the scientific
