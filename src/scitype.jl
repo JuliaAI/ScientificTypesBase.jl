@@ -18,7 +18,7 @@ end
 """
     scitype(io=stdout::IO)
 
-Print to `io` the scitype heirarchy, beginning at `Found` (and so exluding `Missing` and
+Print to `io` the scitype hierarchy, beginning at `Found` (and so excluding `Missing` and
 `Nothing`).
 
 Note that third party packages can extend the hierarchy, so output is not static.
