@@ -1,17 +1,17 @@
 using Test
 using ScientificTypesBase
 import ScientificTypesBase: scitype
+using Suppressor
 
 struct MockMLJ <: Convention end
 
 @testset "type hierarch display" begin
-    str = sprint(io -> scitype(; io))
+    str = sprint(scitype)
     # only smoke tests, to save maintenance:
     @test contains(str, "Found\n  Known\n")
     @test contains(str, "Multiclass")
     @test contains(str, "Textual")
-
-    @test str == sprint(io -> scitype(MockMLJ(); io))
+    @suppress scitype()
 end
 
 @testset "void types" begin

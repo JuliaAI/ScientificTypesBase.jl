@@ -16,21 +16,15 @@ function print_type_tree(io, T, level=0)
 end
 
 """
-    scitype(S::Convention)
-    scitype()
+    scitype(io=stdout::IO)
 
-Display the scitype heirarchy, beginning at `Found` (and so exluding `Missing` and
+Print to `io` the scitype heirarchy, beginning at `Found` (and so exluding `Missing` and
 `Nothing`).
 
-# Notes
-
-- Output is independent of `S` but the first method is provided for dispatch convenience.
-- Third party packages can extend the hierarchy, so output is not
-  static.
+Note that third party packages can extend the hierarchy, so output is not static.
 
 """
-scitype(; io=stdout) = print_type_tree(io, Found)
-scitype(::Convention; io=stdout) = scitype(; io)
+scitype(io::IO=stdout) = print_type_tree(io, Found)
 
 """
     scitype(X, C::Convention)
