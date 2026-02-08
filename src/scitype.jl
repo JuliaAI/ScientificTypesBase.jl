@@ -16,7 +16,7 @@ function print_type_tree(io, T, level=0)
 end
 
 """
-    scitype(io=stdout::IO)
+    scitype(;io=stdout)
 
 Print to `io` the scitype hierarchy, beginning at `Found` (and so excluding `Missing` and
 `Nothing`).
@@ -24,7 +24,7 @@ Print to `io` the scitype hierarchy, beginning at `Found` (and so excluding `Mis
 Note that third party packages can extend the hierarchy, so output is not static.
 
 """
-scitype(io::IO=stdout) = print_type_tree(io, Found)
+scitype(; io=stdout) = print_type_tree(io, Found)
 
 """
     scitype(X, C::Convention)

@@ -6,7 +6,7 @@ using Suppressor
 struct MockMLJ <: Convention end
 
 @testset "type hierarch display" begin
-    str = sprint(scitype)
+    str = sprint(io->scitype(; io))
     # only smoke tests, to save maintenance:
     @test contains(str, "Found\n  Known\n")
     @test contains(str, "Multiclass")
