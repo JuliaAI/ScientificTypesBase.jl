@@ -1,10 +1,37 @@
 # -----------------------------------------------------------------------------------------
-# This file introduces `scitype`, `Scitype` methods and associated fallbacks methods. 
+# This file introduces `scitype`, `Scitype` methods and associated fallbacks methods.
 # It also defines some conveneince methods.
 # -----------------------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------------------
 # scitype function (generic) with fallbacks.
+
+
+# helper to print a type hierarchy:
+function print_type_tree(io, T, level=0)
+    println(io, "  " ^ level, T)
+    for S in subtypes(T)
+        print_type_tree(io, S, level + 1)
+    end
+end
+
+"""
+    scitype(S::Convention)
+    scitype()
+
+Display the scitype heirarchy, beginning at `Found` (and so exluding `Missing` and
+`Nothing`).
+
+# Notes
+
+- Output is independent of `S` but the first method is provided for dispatch convenience.
+- Third party packages can extend the hierarchy, so output is not
+  static.
+
+"""
+scitype(; io=stdout) = print_type_tree(io, Found)
+scitype(::Convention; io=stdout) = scitype(; io)
+
 """
     scitype(X, C::Convention)
 
@@ -34,7 +61,7 @@ In general, one cannot infer the scitype of an object of type
 Nevertheless, for some *restricted* machine types `U`, the statement
 `type(X) == AbstractArray{T, N}` for some `T<:U` already allows one
 deduce that `scitype(X, C) = AbstractArray{S, N}`, where `S` is determined
-by `U`, and convention `C` alone. This is the case in the `DefaultConvention` which is 
+by `U`, and convention `C` alone. This is the case in the `DefaultConvention` which is
 used by *ScientificTypes.jl* , where for example, if `U = Integer`, then `S = Count`.
 
 Such shortcuts are specified as follows:
@@ -67,7 +94,7 @@ function Fallback_Scitype(::Type{Union{T, Missing}}, C) where T
     return Union{Scitype(Missing, C), Scitype(T, C)}
 end
 
-# For the case `Missing` and `Nothing`, 
+# For the case `Missing` and `Nothing`,
 # we return `Missing` and `Nothing` respectively.
 Fallback_Scitype(::Type{Missing}, C) = Missing
 Fallback_Scitype(::Type{Nothing}, C) = Nothing
@@ -115,7 +142,7 @@ explicit `Scitype` correspondence exist mapping `T` to `S`.
         return Arr{scitype_union(A, C), N}
     elseif S === Union{Scitype(Missing, C), Unknown}
         return Arr{Union{Scitype(Missing, C), scitype_union(A, C)}, N}
-    else    
+    else
         return Arr{S, N}
     end
 end

@@ -1,5 +1,7 @@
 module ScientificTypesBase
 
+using InteractiveUtils # needed for displaying the type hierarchy with `scitype()`
+
 # Type exports
 export Convention
 
